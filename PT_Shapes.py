@@ -9,7 +9,9 @@ class Shapes:
         self.height = height
         self.cell = cell
         self.shape_position = None
-        self.r, self.g, self.b = None, None, None
+        self.r, self.o, self.y, self.g, self.c, self.b, self.p = None, None, None, None, None, None, None,
+        self.colors = None
+        self.color = None
 
         self.shapes_position = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
                                 [(0, -1), (-1, -1), (-1, 0), (0, 0)],
@@ -26,5 +28,10 @@ class Shapes:
         self.next_shape = deepcopy(choice(self.shapes))
 
     def shape_color(self):
-        self.r, self.g, self.b = randrange(50, 256), randrange(50, 256), randrange(50, 256)
-        return self.r, self.g, self.b
+        self.r, self.o, self.y, self.g, self.c, self.b, self.p = pygame.Color('red'), pygame.Color('orange'), \
+                                                                 pygame.Color('yellow'), pygame.Color('green'), \
+                                                                 pygame.Color('cyan'), pygame.Color('blue'), \
+                                                                 pygame.Color('purple')
+        self.colors = self.r, self.o, self.y, self.g, self.c, self.b, self.p
+        self.color = choice(self.colors)
+        return self.color

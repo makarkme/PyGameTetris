@@ -1,17 +1,18 @@
 import pygame
-from random import choice, randrange
+from random import choice
 from copy import deepcopy
 import PT_Constants
 import PT_Board
 import PT_Shapes
+import PT_Last_window
 
 
 def main(quit):
-    if quit:
+    if quit is True:
         pygame.quit()
 
-    width, height, cell, speed, limit, fps, resolution = PT_Constants.constants()
-    count = 0
+    width, height, limit_level, limit, speed, count, cell, fps, resolution = PT_Constants.constants()
+    count_l = 3
 
     board = PT_Board.Board(width, height, cell)
     figure = PT_Shapes.Shapes(width, cell, height)
@@ -48,7 +49,7 @@ def main(quit):
                 elif event.key == pygame.K_s:  # Acceleration of the figure.
                     limit = 200
                 elif event.key == pygame.K_w:  # Slowing down the figure.
-                    limit = 1000
+                    limit = limit_level[count_l]
                 elif event.key == pygame.K_r:  # Rotation of the figure.
                     rotation = True
 
@@ -73,7 +74,7 @@ def main(quit):
                         area[shape_prev[j].y][shape_prev[j].x] = color
                     figure.shape, color = figure.next_shape, next_color
                     figure.next_shape, next_color = deepcopy(choice(figure.shapes)), figure.shape_color()
-                    limit = 1000
+                    limit = limit_level[count_l]
                     break
 
         #  Rotation of the shape relative to the coordinate center.
@@ -115,9 +116,27 @@ def main(quit):
                     figure.shape_rect.x, figure.shape_rect.y = x * cell, y * cell
                     pygame.draw.rect(screen, col, figure.shape_rect)
 
-        pygame.display.flip()
-        clock.tick(fps)
+        for i in range(width):
+            if area[0][i]:
+                area = [[0 for i in range(width)] for i in range(height + 1)]
+                if count_l < 4:
+                    count_l += 1
+                else:
+                    speed = 0
+                    limit = 0
+                    count = 0
+                    color = (45, 45, 45)
+                    next_color = (45, 45, 45)
+
+        [pygame.draw.rect(screen, (0, 0, 0), _, 1) for _ in board.render()]  # Drawing the grid.
+
+        if count_l == 4:
+            PT_Last_window.last_window()
+            break
+        else:
+            pygame.display.flip()
+            clock.tick(fps)
 
 
 if __name__ == '__main__':
-    main(False)  # Чтоб момно было отдельно запускать.
+    main(False)
