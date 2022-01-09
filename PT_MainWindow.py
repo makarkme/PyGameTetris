@@ -33,8 +33,8 @@ class MainWindow(wx.Frame):
         cur = con.cursor()
         fetch = cur.execute("""SELECT * FROM PT_Entry""").fetchall()
         for elem in fetch:
-            login.append(elem[1])
-            password.append(elem[2])
+            login.append(str(elem[1]))
+            password.append(str(elem[2]))
         if self.name.GetValue() not in login:
             cur.execute(f"""INSERT INTO PT_Entry(login, password) VALUES \
              ('{self.name.GetValue()}', '{self.password.GetValue()}')""")
@@ -44,6 +44,8 @@ class MainWindow(wx.Frame):
         elif self.name.GetValue() in login:
             num_name = login.index(self.name.GetValue())
             if self.password.GetValue() != password[num_name]:
+                print(login)
+                print(password)
                 self.text_4 = wx.StaticText(self.login, label="Неверный пароль", pos=(220, 350))
                 self.text_4.Fit()
             else:
