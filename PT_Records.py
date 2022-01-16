@@ -5,18 +5,28 @@ class Records:
     def __init__(self, record, point):
         self.record = record
         self.point = point
-        self.none = None
 
     # Рекорд пользователя
-    def record(self):
-        self.none = None
-        with open('record') as f:
-            return f.readline()
+    def user_record(self):
+        con = sqlite3.connect("PyGameTetris_db.sqlite")
+        cur = con.cursor()
+        file_login = open('login.txt', 'r')
+        login = file_login.read()
+        record_bd = cur.execute(f"""SELECT record FROM PT_Entry WHERE login = ?""", (login,)).fetchone()
+        con.close()
+        file_login.close()
+        return record_bd[0]
 
     # Обновление рекорда пользователя
     def next_record(self):
-        rec = max(int(self.record), self.point)
         con = sqlite3.connect("PyGameTetris_db.sqlite")
         cur = con.cursor()
-        cur.execute("""UPDATE PT_Entry SET record = 100 WHERE login = 'asd'""")
+        file_login = open('login.txt', 'r')
+        login = file_login.read()
+        self.record = cur.execute("""SELECT record FROM PT_Entry WHERE login = ?""", (login,)).fetchone()
+        self.record = self.record[0]
+        rec = max(int(self.record), self.point)
+        cur.execute("""UPDATE PT_Entry SET record = ? WHERE login = ?""", (rec, login))
         con.commit()
+        con.close()
+        file_login.close()

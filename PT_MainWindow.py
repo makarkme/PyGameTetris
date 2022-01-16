@@ -61,6 +61,10 @@ class MainWindow(wx.Frame):
             cur.execute(f"""INSERT INTO PT_Entry(login, password) VALUES \
                  ('{self.name.GetValue()}', '{self.password.GetValue()}')""")
             con.commit()
+            con.close()
+            file_login = open("login.txt", "w")
+            file_login.write(self.name.GetValue())
+            file_login.close()
             self.record = 0
             self.login.Hide()
             self.menu_()
@@ -70,6 +74,9 @@ class MainWindow(wx.Frame):
                 self.text_4 = wx.StaticText(self.login, label="Неверный пароль", pos=(220, 350))
                 self.text_4.Fit()
             else:
+                file_login = open("login.txt", "w")
+                file_login.write(self.name.GetValue())
+                file_login.close()
                 self.record = rec[self.num_name]
                 self.login.Hide()
                 self.menu_()
