@@ -68,7 +68,7 @@ class MainWindow(wx.Frame):
             login.append(str(elem[1]))
             password.append(str(elem[2]))
             rec.append(str(elem[3]))
-        if self.name.GetValue() not in login:
+        if self.name.GetValue() not in login and self.name.GetValue() != "" and self.password.GetValue() != "":
             cur.execute(f"""INSERT INTO PT_Entry(login, password) VALUES \
                  ('{self.name.GetValue()}', '{self.password.GetValue()}')""")
             con.commit()
